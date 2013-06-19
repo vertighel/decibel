@@ -12,7 +12,9 @@
 <h1>Data Archive</h1>
 <button>add</button>
 <section></section>
-
+<form id="insert">
+    <button>insert</button>
+</form>
 <script>
 
 var t1 = cinetable() // in cine.js
@@ -28,6 +30,46 @@ d3.json("./cine.php?what=table",function(error,data){
 function mouseclick(e,id){}
 /// Mouse over and out
 function mouseover(e,id){}
+
+function clone(selector) {
+    var node = d3.select(selector).node();
+    return d3.select(node.parentNode.insertBefore(node.cloneNode(true),node.nextSibling));
+}
+
+// trigger event when button is clicked
+d3.select("button").on("click",function(){
+    var tr = clone("tbody tr:last-child"); // clone the last row in the table
+    var tds= d3.select("tbody tr:last-child")
+	.attr('data-id',null)
+	.selectAll('td')
+	.html('<input>')
+
+    tds.selectAll('input')
+	.attr('placeholder',function(){ return d3.select(this.parentNode).attr('data-key') })
+	.attr('name',function(){ return d3.select(this.parentNode).attr('data-key')+'[]' })
+	.attr('form','insert')
+
+    return false; // prevent button redirecting to new page
+});
+
+
+
+var f=$("form aside")
+$("form#insert").submit(function(event){ // Eseguo la funzione quando viene eseguito il form
+    console.log($(this).serialize());
+    event.preventDefault(); // Non eseguire il form in maniera standard: fallo con questo script
+	$.post("./cine.php?what=insert", $(this).serialize(),
+		function(data){ // Eseguo la funzione quando la richiesta AJAX è stata completata
+		    console.log(data)
+		    data.answer=='info' 
+			? $('form').fadeOut(function(){ document.location = './cine-logged.html' }) 
+		       : f.fadeIn(function(){$(this).html(data.answer) })
+		
+	      },"json") // con },"json"); so di avere i dati in json e non in stringa
+    
+    return false; // Usare .ajax se voglio far uscire i dati dalla funzione! async:false, data:$serialize... e inizializzare fuori
+});
+
 
 </script>
     

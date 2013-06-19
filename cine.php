@@ -55,12 +55,18 @@ function logout(){
 
 
 function table(){
-  $a=new stdClass();
-  $a->answer=null; // Inizializzazione oggetto di risposta
   $g=new decibel('127.0.0.1','root','password','test'); // Connessione al database
   $t='movies'; // table  
-
   $g->select(ALL,$t)->query()->populate()->show();
+}
+
+
+function insert(){
+  $g=new decibel('127.0.0.1','root','password','test'); // Connessione al database
+  $t='movies'; // table  
+  $p=$_POST;
+  //$p=json_decode('{"author":["a1","a2"],"title":["t1","t2"]}');
+    echo json_encode(array_keys($p));
   
 }
 
@@ -80,6 +86,9 @@ if($what=='logout')
 
 if($what=='table')
  table();
+
+if($what=='insert')
+ insert();
 
 
 ?>
