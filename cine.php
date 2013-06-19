@@ -54,6 +54,16 @@ function logout(){
 }
 
 
+function table(){
+  $a=new stdClass();
+  $a->answer=null; // Inizializzazione oggetto di risposta
+  $g=new decibel('127.0.0.1','root','password','test'); // Connessione al database
+  $t='movies'; // table  
+
+  $g->select(ALL,$t)->query()->populate()->show();
+  
+}
+
 ////////// MAIN //////////
 
 if(!isset($what))
@@ -67,6 +77,9 @@ if($what=='private_area')
 
 if($what=='logout')
  logout();
+
+if($what=='table')
+ table();
 
 
 ?>

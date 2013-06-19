@@ -56,3 +56,20 @@ form>aside{
     display:none;
 }
 
+/* table */
+
+table{
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+th{
+    width: 40%;
+    border-bottom: 1px dotted gray;
+}
+
+tr>*:last-child{
+    width: 10%;
+    text-align:center;
+}
+

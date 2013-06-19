@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>cineforum</title>
+<style>
+    @import url('./cine.css');
+</style>
+ <script src="js/jquery-latest.min.js"></script> 
+ <script src="js/d3.v3.min.js"></script> 
+ <script src="cine.js"></script> 
+<body>
+<header></header>
+<h1>Data Archive</h1>
+<button>add</button>
+<section></section>
+
+<script>
+
+var t1 = cinetable() // in cine.js
+
+t1.columns(["title","author","year"]).id("id");
+d3.json("./cine.php?what=table",function(error,data){
+    console.log(data)
+    d3.select("section")
+    	.datum(data) /// filtro sulle linee
+	.call(t1)	    
+});
+/// Mouse click
+function mouseclick(e,id){}
+/// Mouse over and out
+function mouseover(e,id){}
+
+</script>
+    
