@@ -22,7 +22,7 @@ cinetable = function(config) {
 	var tbody = table.select('tbody');
 
 	/// appending the header row
-	var th = thead.append('tr').selectAll("th")
+	var th = thead.selectAll("th")
      	    .data(columns);
 
 	th.enter().append("th");

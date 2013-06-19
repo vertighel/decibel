@@ -61,13 +61,21 @@ function table(){
 }
 
 
-function insert(){
+function insert(){  /// Magari sta cosa della trasposizione passarla nei metodi!!!!
   $g=new decibel('127.0.0.1','root','password','test'); // Connessione al database
   $t='movies'; // table  
   $p=$_POST;
-  //$p=json_decode('{"author":["a1","a2"],"title":["t1","t2"]}');
-    echo json_encode(array_keys($p));
   
+  $keys=array_keys($p);
+  $vals=array_values($p); // in the wrong "direction"
+  /// "transpose" the array of array values 
+  array_unshift($vals, null);
+  $valarray=call_user_func_array('array_map', $vals);
+
+  $g->insert($t,$keys,$valarray)->query();
+
+  echo json_encode($_POST);
+
 }
 
 ////////// MAIN //////////
