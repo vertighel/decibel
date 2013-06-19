@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>cineforum</title>
+<style>
+    @import url('./cine.css');
+</style>
+<script src="js/jquery-latest.min.js"></script>
+<body>
+<header><a href="#">logout</a></header>
+<h1>Data Archive - private area</h1>
+<h2>access denied</h2>
+
+<script>
+    
+$(function(){ // Eseguo il contenuto quando il caricamento della pagina è stato completato
+    $.ajax("cine.php?what=private_area", {
+	async:false,	
+	dataType:"json",
+	success:function(data){ // Eseguo la funzione quando la richiesta AJAX è stata completata
+	    console.log(data)
+	    $('h2').html(data.user);
+	}
+    });
+});
+
+$('header a').click(function(event){
+    $.get("cine.php?what=logout", function(data){ // Eseguo la funzione quando la richiesta AJAX è stata completata
+	$('h2').fadeOut(function(){ document.location = './cine.html' });
+    }); 
+    return false
+});
+
+</script>

@@ -17,13 +17,13 @@
   li{list-style: none;} 
   li:before{content:"· "; color: gray;}
   a{color:rgba(120,120,155,0.9);}
-  nav{font-size:0.8em; position:fixed; top: 20px; left:-20px; max-width:225px;}
+  nav{font-size:0.8em; position:fixed; top: 20px; left:-20px; max-width:233px;}
   nav .toc-active{background-color:rgba(210,230,200,0.6);}
 </style>
 <body>
 <nav></nav>
   <h1>Decibel ))</h1>
-  <h2>A cool way to manage your database</h2>
+  <h2>A cool way to manage your DB</h2>
   
   Decibel is a PHP class using the MySQLi module to interact with your MySQL database.<br>
   I will show you step by step how to use it just right now.

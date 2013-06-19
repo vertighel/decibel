@@ -1003,7 +1003,6 @@ class decibel{
       $deb->log(null,$this);
     else // Selected
       $deb->log(null,$this->{$va});
-    echo '</pre></code>';
 
     return $this->query();
   }
