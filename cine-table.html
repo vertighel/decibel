@@ -11,65 +11,123 @@
 <header></header>
 <h1>Data Archive</h1>
 <section></section>
-    <button id="add">add</button>
-<form id="insert">
-    <button id="ins">insert</button>
-</form>
+
+<button id="add">new</button>
+<button id="ins" form="insert">insert</button>
+<button id="del">delete</button>
+<button id="rep">replace</button>
+
+
 <script>
 
-var t1 = cinetable() // in cine.js
 
-t1.columns(["title","author","year"]).id("id");
+/// TABLE INIT
+var t1 = cinetable() /// in cine.js. Initializing the table!
+t1.columns(["id","title","author","year"]); /// Choosing the columns;
+var mouseclick=function(e,id){} /// Mouse click on <tr>. See cellclick() on bottom
+var mouseover=function(e,id){} /// Mouse over and out
 
-function updatetable(){
-    d3.json("./cine.php?what=table",function(error,data){
-	console.log(data)
-	d3.select("section")
-    	    .datum(data) /// filtro sulle linee
-	    .call(t1)	    
-	console.log("ricarico")
-    });
-}
-updatetable()
-/// Mouse click
-function mouseclick(e,id){}
-/// Mouse over and out
-function mouseover(e,id){}
 
-function clone(selector) {
-    var node = d3.select(selector).node();
-    return d3.select(node.parentNode.insertBefore(node.cloneNode(true),node.nextSibling));
-}
-
-// trigger event when button is clicked
-var insnum=0
-
+/// ADD LINE - d3 instead jquery for data binding
 d3.select("button#add").on("click",function(){
-    var tr = clone("tbody tr:last-child"); // clone the last row in the table
+    var tr = clone("tbody tr:last-child"); /// Clone the last row in the table
     var tds= d3.select("tbody tr:last-child")
-	.attr('data-id',null)
-	.selectAll('td')
-	.html('<input>')
+	.attr('data-id',null); /// Nevermind
+    
+    tds.selectAll('td:not(:first-child)') /// Don't wanna touch the id
+	.html('<input required>') /// Substituting text with <inputs> 
+    
+    tds.selectAll('td:first-child') 
+	.html('new') /// Just because don't want the cloned id....
 
-    tds.selectAll('input')
+    tds.selectAll('input') /// Setting input properties
 	.attr('placeholder',function(){ return d3.select(this.parentNode).attr('data-key') })
 	.attr('name',function(){ return d3.select(this.parentNode).attr('data-key')+'[]' })
 	.attr('form','insert')
 
-    return false; // prevent button redirecting to new page
+    tds.selectAll('tr>td:last-child input') /// Setting input properties
+	.attr('type','number')
+	.attr('min','1920')
+	.attr('max','2013')
+
 });
 
 
-$("form#insert").submit(function(event){ // Eseguo la funzione quando viene eseguito il form
-    event.preventDefault(); // Non eseguire il form in maniera standard: fallo con questo script
-	$.post("./cine.php?what=insert", $(this).serialize(),
-		function(data){ // Eseguo la funzione quando la richiesta AJAX è stata completata
-		    console.log(data)
-		    updatetable()
-		},"json") // con },"json"); so di avere i dati in json e non in stringa
+/// INSERT
+$("button#ins").click(function(){
+    $.post("./cine.php?what=insert", $("td [name]").serialize(),
+	   function(data){
+	       console.log(data) /// php json echo
+	       updatetable()
+	   },"json")
+});
+
+
+/// REPLACE
+$('button#rep').click(function(){
+
+    inputdata={}; /// Initializing new object
+    $(".mouseclick").find("td").each(function(){ /// Filling
+	inputdata[$(this).attr('data-key')] = $(this).html();
+    });
+    //    console.log(inputdata)
+    $.post("./cine.php?what=replace", inputdata,
+	   function(data){
+	       console.log(data) /// php json echo
+	       reset();
+	       updatetable()	       
+	   },"json") 
+});
+
+
+/// DELETE
+$('button#del').click(function(event){
+    inputdata={}; /// Initializing new object
+    $(".mouseclick").find("td:first-child").each(function(){  /// Filling
+	inputdata[$(this).attr('data-key')] = $(this).html();
+    });
+    //    console.log(inputdata)
+    $.post("./cine.php?what=delete", inputdata,
+    	   function(data){
+    	       console.log(data) /// php json echo
+	       reset()
+    	       updatetable()	       
+    	   },"json")
+});
+
+
+/// FUNCTIONS
+function updatetable(){ /// Call it every time we modify the table
+    d3.json("./cine.php?what=table",function(error,data){
+	d3.select("section").datum(data).call(t1)	    	
+	d3.selectAll('td').on("click", cellclick);
+	d3.selectAll('td').on("focus", cellclick);
+    });
+}
+updatetable(); /// And at the beginning
+
+function reset(){ /// Call it every time you want to reset something
+    $('.mouseclick').removeClass("mouseclick")
+    $('[contenteditable]').removeAttr("contenteditable")
+}
+reset(); /// And at the beginning
+
+function cellclick(){ /// Mouse click on a <td>!
+    reset();
+    d3.select(this.parentNode).classed("mouseclick",true) /// on his <tr>
+    d3.select(".mouseclick") 
+	.selectAll('td:not(:first-child)') /// Don't wanna edit the id
+	.attr('contenteditable', true)
     
-    return false; // Usare .ajax se voglio far uscire i dati dalla funzione! async:false, data:$serialize... e inizializzare fuori
-});
+    $(this).keypress(function(e){ return e.which != 13; }); /// No new lines
+    $(this).focus(); /// it was editable but not focused
+    
+}
+
+function clone(selector){ /// d3 analogue for $(selector).clone()
+    var node = d3.select(selector).node();
+    return d3.select(node.parentNode.insertBefore(node.cloneNode(true),node.nextSibling));
+}
 
 
 </script>

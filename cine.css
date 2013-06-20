@@ -68,8 +68,25 @@ th{
     border-bottom: 1px dotted gray;
 }
 
-tr>*:last-child{
+tr>*:last-child, thead>*:last-child, tr>*:first-child, thead>*:first-child{
     width: 10%;
     text-align:center;
 }
 
+td{
+    padding:5px;
+}
+
+tr input{
+    margin:0;
+    padding:0;
+    width:85%;
+}
+
+tr>td:last-child input{
+    width:99%;
+}
+
+[contenteditable]{
+    color: gray;
+}

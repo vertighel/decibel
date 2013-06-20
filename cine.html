@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>cineforum</title>
+<style>
+    @import url('./cine.css');
+</style>
+<script src="js/jquery-latest.min.js"></script> 
+<script src="js/d3.v3.min.js"></script> 
+<body>
+<header></header>
+<h1>Data Archive</h1>
+
+<form>
+  <input id="user" placeholder="username" name="user" required />
+  <input id="pass" placeholder="password" name="pass" type="password" required />
+  <button type="submit">login</button>
+  <aside></aside>
+</form>
+<section></section>
+<script>
+    
+var f=$("form aside")
+$("form").submit(function(event){ // Eseguo la funzione quando viene eseguito il form
+    event.preventDefault(); // Non eseguire il form in maniera standard: fallo con questo script
+	$.ajax({url:"./cine.php?what=login", 
+		method:"post",
+		data:$(this).serialize(),	    
+		dataType:'json',
+		async:false,
+		success: function(data){ // Eseguo la funzione quando la richiesta AJAX è stata completata
+		    console.log(data)
+		    data.answer=='info' 
+			? $('form').fadeOut(function(){ document.location = './cine-logged.html' }) 
+		       : f.fadeIn(function(){$(this).html(data.answer) })
+		}
+	       }) // con },"json"); so di avere i dati in json e non in stringa
+    
+    return false; // Usare .ajax se voglio far uscire i dati dalla funzione! async:false, data:$serialize... e inizializzare fuori
+});
+
+</script>

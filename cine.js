@@ -37,11 +37,11 @@ cinetable = function(config) {
 	
 	rows.enter().append("tr")
 	    .attr('data-'+id, function(d){return d[id]})
-
+	
 	rows.attr('data-row',function(d,i){return i})
     	    .on('mouseover', function(d){mouseover(d[id],id)})
     	    .on('mouseout', function(d){mouseover(null,id)})
-	     .on('click',function(d){mouseclick(d,id)})
+	    .on('click',function(d){mouseclick(d,id)})
 //	    .on('click',mouseclick)
 
 	rows.exit().remove();
